@@ -99,9 +99,6 @@ Las contribuciones son bienvenidas. Si tienes una idea o mejora, por favor abre 
 
 Este proyecto está bajo la Licencia MIT. Consulta el archivo `LICENSE` para más detalles.
 
-## Contacto
-
-Para cualquier duda o sugerencia, por favor contacta a [tu-email@ejemplo.com](mailto:tu-email@ejemplo.com).
 
 ---
 
