@@ -4,22 +4,86 @@
     <meta charset="UTF-8">
     <title>Lista de Compras</title>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+    <style>
+        body {
+            background-color: #f8f9fa;
+        }
+        .container {
+            margin-top: 50px;
+        }
+        .card {
+            box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075);
+        }
+        .navbar-brand {
+            font-weight: bold;
+        }
+        .btn-primary, .btn-secondary, .btn-info, .btn-danger {
+            border-radius: 50px;
+        }
+        .list-group-item {
+            border: 1px solid #dee2e6;
+            border-radius: 0.25rem;
+            margin-bottom: 10px;
+        }
+        .footer {
+            background-color: #343a40;
+            color: #fff;
+        }
+    </style>
 </head>
-<body class="bg-light">
-    <div class="container mt-5">
-        <div class="row">
-            <div class="col">
-                <h1 class="text-center">Lista de Compras</h1>
-                <ul class="list-group">
-                    {% for compra in compras %}
-                    <li class="list-group-item d-flex justify-content-between align-items-center">
-                        <span>Compra ID: {{ compra.id }} - Usuario: {{ compra.usuario.username }} - Total: ${{ compra.total }}</span>
-                        <a href="{% url 'detalle_compra' compra.id %}" class="btn btn-primary btn-sm">Ver Detalles</a>
+<body>
+    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+        <div class="container">
+            <a class="navbar-brand" href="{% url 'index' %}">Harmonize Hub</a>
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                <ul class="navbar-nav ml-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'index' %}">Inicio</a>
                     </li>
-                    {% endfor %}
+                    {% if user.is_staff %}
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'lista_productos' %}">Productos</a>
+                    </li>
+                    {% endif %}
+                    <li class="nav-item active">
+                        <a class="nav-link" href="{% url 'ver_carrito' %}"><i class="fas fa-shopping-cart"></i> Carrito</a>
+                    </li>
                 </ul>
             </div>
         </div>
+    </nav>
+    <div class="container mt-4">
+        <div class="card">
+            <div class="card-header text-center">
+                <h1>Lista de Compras</h1>
+            </div>
+            <div class="card-body">
+                <ul class="list-group mb-3">
+                    {% for compra in compras %}
+                    <li class="list-group-item d-flex justify-content-between align-items-center">
+                        <span>Compra #{{ compra.id }} - {{ compra.fecha }}</span>
+                        <div>
+                            <a href="{% url 'detalle_compra' compra.id %}" class="btn btn-info btn-sm"><i class="fas fa-receipt"></i> Ver Detalle</a>
+                            <form method="post" action="{% url 'eliminar_compra' compra.id %}" style="display:inline;" onsubmit="return confirm('¿Estás seguro que quieres eliminar esta compra?');">
+                                {% csrf_token %}
+                                <button type="submit" class="btn btn-danger btn-sm"><i class="fas fa-trash-alt"></i> Eliminar</button>
+                            </form>
+                        </div>
+                    </li>
+                    {% endfor %}
+                </ul>
+                <div class="text-center">
+                    <a href="{% url 'index' %}" class="btn btn-primary"><i class="fas fa-arrow-left"></i> Volver al Inicio</a>
+                </div>
+            </div>
+        </div>
     </div>
+    <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@1.16.1/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrap.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 </body>
 </html>
