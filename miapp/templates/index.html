@@ -14,7 +14,7 @@
       color: #ffffff;
     }
     .navbar {
-      background-color: #2b65cf;
+      background-color: #1f1f1f;
     }
     .navbar-brand {
       color: #ff6f61;
@@ -81,13 +81,9 @@
             <a class="nav-link" href="{% url 'crear_usuario' %}">Crear Usuario</a>
           </li>
           {% endif %}
-
-
           <li class="nav-item">
             <a class="nav-link" href="{% url 'ver_carrito' %}"><i class="fas fa-shopping-cart"></i> Carrito</a>
           </li>
-
-        
           <li class="nav-item">
             {% if user.is_authenticated %}
               <form method="post" action="{% url 'logout' %}">
@@ -99,7 +95,6 @@
             {% endif %}
           </li>
         </ul>
-        
       </div>
     </div>
   </nav>
@@ -178,12 +173,6 @@
       </div>
     </div>
   </div>
-  <div class="text-center">
-    <h2>Nuestras Ubicaciones</h2>
-  </div>
-  <div>
-    <iframe src="https://www.google.com/maps/d/embed?mid=10QPaKtamUVherXCBDAngOungsze9_NM&ehbc=2E312F" width="100%" height="600"></iframe>
-  </div>
 
   <footer class="footer mt-5 p-4 text-center">
     <p class="mb-0">&copy; Todos los derechos reservados.</p>
@@ -191,15 +180,19 @@
 
   <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@1.16.1/dist/umd/popper.min.js"></script>
-  <script src="https://stackpath.bootstrap.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
   <script>
-    document.addEventListener('DOMContentLoaded', () => {
+    $(document).ready(function(){
+      $('.carousel').carousel({
+        interval: 2000
+      });
+
       let carrito = JSON.parse(localStorage.getItem('carrito')) || [];
       document.querySelectorAll('.agregar-carrito').forEach(button => {
         button.addEventListener('click', () => {
           const id = button.getAttribute('data-id');
           const nombre = button.closest('.card').querySelector('.card-title').textContent;
-          const precio = button.closest('.card').querySelector('strong').textContent.replace('$', '');
+          const precio = parseFloat(button.closest('.card').querySelector('strong').textContent.replace('$', ''));
           const producto = { id, nombre, precio, cantidad: 1 };
           const index = carrito.findIndex(item => item.id === id);
           if (index === -1) {
@@ -207,51 +200,75 @@
           } else {
             carrito[index].cantidad += 1;
           }
-          
           localStorage.setItem('carrito', JSON.stringify(carrito));
           alert(`${nombre} agregado al carrito`);
         });
       });
-    });
-  </script>
 
-   <!-- Apartado de musica -->
-   <audio id="background-music" autoplay loop>
-    <source src="{% static 'audio/intro.mp3' %}" type="audio/mpeg">
-    Tu navegador no soporta la reproducción de audio.
-  </audio>
-  
-  <button id="audio-control" class="btn btn-dark" style="position: fixed; top: 10px; right: 10px; z-index: 1000;">
-    <i id="audio-icon" class="fas fa-pause"></i>
-  </button>
-  
-  <script>
-    document.addEventListener('DOMContentLoaded', function() {
-      var audio = document.getElementById('background-music');
-      var audioControl = document.getElementById('audio-control');
-      var audioIcon = document.getElementById('audio-icon');
-  
-      audio.play().then(function() {
-        console.log('El audio se está reproduciendo.');
-      }).catch(function(error) {
-        console.log('El audio no se pudo reproducir automáticamente debido a restricciones del navegador: ', error);
-        audioIcon.classList.remove('fa-pause');
-        audioIcon.classList.add('fa-play');
+      const csrftoken = '{{ csrf_token }}';
+      const csrfInput = document.createElement('input');
+      csrfInput.type = 'hidden';
+      csrfInput.name = 'csrfmiddlewaretoken';
+      csrfInput.value = csrftoken;
+      document.body.appendChild(csrfInput);
+
+      document.getElementById('guardar-carrito').addEventListener('click', () => {
+        fetch('{% url "guardar_carrito" %}', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'X-CSRFToken': csrftoken
+          },
+          body: JSON.stringify({ carrito: carrito })
+        })
+        .then(response => response.json())
+        .then(data => {
+          if (data.success) {
+            alert('Carrito guardado exitosamente');
+            localStorage.removeItem('carrito');
+            carrito = [];
+            // Actualizar el carrito en la página
+            renderCarrito();
+            const detalleCompraBtn = document.getElementById('detalle-compra-btn');
+            const detalleCompraLink = document.getElementById('detalle-compra-link');
+            detalleCompraLink.href = `{% url 'detalle_compra' 0 %}`.replace('0', data.compra_id);
+            detalleCompraBtn.style.display = 'block';
+          } else {
+            alert(`Error al guardar el carrito: ${data.error}`);
+          }
+        })
+        .catch(error => {
+          console.error('Error:', error);
+          alert(`Ocurrió un error al guardar el carrito: ${error}`);
+        });
       });
-  
-      audioControl.addEventListener('click', function() {
-        if (audio.paused) {
-          audio.play();
-          audioIcon.classList.remove('fa-play');
-          audioIcon.classList.add('fa-pause');
+
+      const renderCarrito = () => {
+        const carritoElement = document.getElementById('carrito');
+        carritoElement.innerHTML = '';
+        if (carrito.length === 0) {
+          carritoElement.innerHTML = '<li class="list-group-item text-center">No hay productos en el carrito.</li>';
         } else {
-          audio.pause();
-          audioIcon.classList.remove('fa-pause');
-          audioIcon.classList.add('fa-play');
+          carrito.forEach((producto, index) => {
+            const item = document.createElement('li');
+            item.classList.add('list-group-item', 'd-flex', 'justify-content-between', 'align-items-center');
+            item.innerHTML = `
+              <span>${producto.nombre} - $${producto.precio} x ${producto.cantidad}</span>
+              <button class="btn btn-danger btn-sm" onclick="eliminarProducto(${index})"><i class="fas fa-trash-alt"></i> Eliminar</button>
+            `;
+            carritoElement.appendChild(item);
+          });
         }
-      });
+      };
+
+      const eliminarProducto = (index) => {
+        carrito.splice(index, 1);
+        localStorage.setItem('carrito', JSON.stringify(carrito));
+        renderCarrito();
+      };
+
+      renderCarrito();
     });
   </script>
-  
 </body>
 </html>
