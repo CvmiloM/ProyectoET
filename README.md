@@ -25,20 +25,15 @@ Sigue estos pasos para configurar el proyecto localmente:
 
 1. Clona este repositorio:
     ```bash
-    git clone https://github.com/tuusuario/game-figures-hub.git
+    git clone https://github.com/CvmiloM/ProyectoET.git
     ```
 
-2. Navega al directorio del proyecto:
-    ```bash
-    cd game-figures-hub
-    ```
-
-3. Crea un entorno virtual:
+2. Crea un entorno virtual:
     ```bash
     python -m venv env
     ```
 
-4. Activa el entorno virtual:
+3. Activa el entorno virtual:
 
     - En Windows:
         ```bash
@@ -50,9 +45,9 @@ Sigue estos pasos para configurar el proyecto localmente:
         source env/bin/activate
         ```
 
-5. Instala las dependencias:
+4. Instala las dependencias:
     ```bash
-    pip install -r requirements.txt
+    pip install pillow
     ```
 
 6. Realiza las migraciones:
