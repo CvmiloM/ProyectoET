@@ -80,10 +80,6 @@ Sigue estos pasos para configurar el proyecto localmente:
 
 Para cambiar la música de fondo, reemplaza el archivo `intro.mp3` en el directorio `static/audio/`.
 
-### Estilos
-
-Puedes modificar los estilos de la tienda editando el archivo CSS en `static/css/estilos.css`.
-
 ## Contribuciones
 
 Las contribuciones son bienvenidas. Si tienes una idea o mejora, por favor abre un "issue" o envía un "pull request".
