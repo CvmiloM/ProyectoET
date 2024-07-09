@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Carrito</title>
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+  {% load static %}
+  <link rel="stylesheet" type="text/css" href="{% static 'css/estilos.css' %}">
+  <style>
+    body {
+      background-color: #121212;
+      color: #ffffff;
+    }
+    .navbar {
+      background-color: #1f1f1f;
+    }
+    .navbar-brand {
+      color: #ff6f61;
+    }
+    .navbar-nav .nav-link {
+      color: #ffffff;
+    }
+    .navbar-nav .nav-link:hover {
+      color: #ff6f61;
+    }
+    .card {
+      background-color: #1f1f1f;
+      border: none;
+    }
+    .card-header {
+      background-color: #ff6f61;
+      color: #ffffff;
+    }
+    .btn-primary, .btn-secondary, .btn-info, .btn-danger {
+      border-radius: 50px;
+    }
+    .btn-primary {
+      background-color: #ff6f61;
+      border: none;
+    }
+    .btn-primary:hover {
+      background-color: #ff3b31;
+    }
+    .btn-secondary {
+      background-color: #6c757d;
+    }
+    .btn-info {
+      background-color: #17a2b8;
+    }
+    .btn-danger {
+      background-color: #dc3545;
+    }
+    .list-group-item {
+      background-color: #2b2b2b;
+      color: #ffffff;
+      border: 1px solid #3e3e3e;
+      border-radius: 0.25rem;
+      margin-bottom: 10px;
+    }
+    .footer {
+      background-color: #1f1f1f;
+      color: #ffffff;
+    }
+  </style>
+</head>
+<body>
+  <nav class="navbar navbar-expand-lg navbar-dark">
+    <div class="container">
+      <a class="navbar-brand" href="{% url 'index' %}">Game Figures Hub</a>
+      <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarSupportedContent">
+        <ul class="navbar-nav ml-auto">
+          <li class="nav-item">
+            <a class="nav-link" href="{% url 'index' %}">Inicio</a>
+          </li>
+          {% if user.is_staff %}
+          <li class="nav-item">
+            <a class="nav-link" href="{% url 'lista_productos' %}">Productos</a>
+          </li>
+          {% endif %}
+          <li class="nav-item active">
+            <a class="nav-link" href="{% url 'ver_carrito' %}"><i class="fas fa-shopping-cart"></i> Carrito</a>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </nav>
+  <div class="container mt-4">
+    <div class="card">
+      <div class="card-header text-center">
+        <h1>Carrito de Compras</h1>
+      </div>
+      <div class="card-body">
+        <ul id="carrito" class="list-group mb-3">
+          <!-- Productos del carrito se mostrarán aquí -->
+        </ul>
+        <div class="text-right mb-3">
+          <a href="{% url 'lista_compras' %}" class="btn btn-secondary"><i class="fas fa-list"></i> Ver Lista de Compras</a>
+        </div>
+        <div id="detalle-compra-btn" class="text-right mb-3" style="display: none;">
+          <a id="detalle-compra-link" href="#" class="btn btn-info"><i class="fas fa-receipt"></i> Ver Detalle de Compra</a>
+        </div>
+        <div class="text-right">
+          <button id="guardar-carrito" class="btn btn-primary"><i class="fas fa-save"></i> Guardar Carrito</button>
+        </div>
+      </div>
+    </div>
+  </div>
+  <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@1.16.1/dist/umd/popper.min.js"></script>
+  <script src="https://stackpath.bootstrap.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      let carrito = JSON.parse(localStorage.getItem('carrito')) || [];
+      const carritoElement = document.getElementById('carrito');
+
+      const renderCarrito = () => {
+        carritoElement.innerHTML = '';
+        if (carrito.length === 0) {
+          carritoElement.innerHTML = '<li class="list-group-item text-center">No hay productos en el carrito.</li>';
+        } else {
+          carrito.forEach((producto, index) => {
+            const item = document.createElement('li');
+            item.classList.add('list-group-item', 'd-flex', 'justify-content-between', 'align-items-center');
+            item.innerHTML = `
+              <span>${producto.nombre} - $${producto.precio} x ${producto.cantidad}</span>
+              <button class="btn btn-danger btn-sm" onclick="eliminarProducto(${index})"><i class="fas fa-trash-alt"></i> Eliminar</button>
+            `;
+            carritoElement.appendChild(item);
+          });
+        }
+      };
+
+      const eliminarProducto = (index) => {
+        carrito.splice(index, 1);
+        localStorage.setItem('carrito', JSON.stringify(carrito));
+        renderCarrito();
+      };
+
+      renderCarrito();
+
+      const csrftoken = '{{ csrf_token }}';
+      const csrfInput = document.createElement('input');
+      csrfInput.type = 'hidden';
+      csrfInput.name = 'csrfmiddlewaretoken';
+      csrfInput.value = csrftoken;
+      document.body.appendChild(csrfInput);
+
+      document.getElementById('guardar-carrito').addEventListener('click', () => {
+        console.log('Botón Guardar Carrito presionado');
+        console.log('Productos en el carrito:', carrito);
+        fetch('{% url "guardar_carrito" %}', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'X-CSRFToken': csrftoken
+          },
+          body: JSON.stringify({ carrito: carrito })
+        })
+        .then(response => {
+          console.log('Respuesta del servidor recibida');
+          return response.json();
+        })
+        .then(data => {
+          console.log('Datos recibidos del servidor:', data);
+          if (data.success) {
+            alert('Carrito guardado exitosamente');
+            localStorage.removeItem('carrito');
+            carrito = [];
+            renderCarrito();
+            const detalleCompraBtn = document.getElementById('detalle-compra-btn');
+            const detalleCompraLink = document.getElementById('detalle-compra-link');
+            detalleCompraLink.href = `{% url 'detalle_compra' 0 %}`.replace('0', data.compra_id);
+            detalleCompraBtn.style.display = 'block';
+          } else {
+            alert(`Error al guardar el carrito: ${data.error}`);
+          }
+        })
+        .catch(error => {
+          console.error('Error:', error);
+          alert(`Ocurrió un error al guardar el carrito: ${error}`);
+        });
+      });
+    });
+
+    // Definir la función eliminarProducto fuera del DOMContentLoaded para que esté disponible
+    const eliminarProducto = (index) => {
+      let carrito = JSON.parse(localStorage.getItem('carrito')) || [];
+      carrito.splice(index, 1);
+      localStorage.setItem('carrito', JSON.stringify(carrito));
+      renderCarrito();
+    };
+
+    // Asegurarse de que renderCarrito también esté definido fuera del DOMContentLoaded
+    const renderCarrito = () => {
+      const carritoElement = document.getElementById('carrito');
+      let carrito = JSON.parse(localStorage.getItem('carrito')) || [];
+      carritoElement.innerHTML = '';
+      if (carrito.length === 0) {
+        carritoElement.innerHTML = '<li class="list-group-item text-center">No hay productos en el carrito.</li>';
+      } else {
+        carrito.forEach((producto, index) => {
+          const item = document.createElement('li');
+          item.classList.add('list-group-item', 'd-flex', 'justify-content-between', 'align-items-center');
+          item.innerHTML = `
+            <span>${producto.nombre} - $${producto.precio} x ${producto.cantidad}</span>
+            <button class="btn btn-danger btn-sm" onclick="eliminarProducto(${index})"><i class="fas fa-trash-alt"></i> Eliminar</button>
+          `;
+          carritoElement.appendChild(item);
+        });
+      }
+    };
+  </script>
+
+
+<audio id="background-music" autoplay loop>
+  <source src="{% static 'audio/intro.mp3' %}" type="audio/mpeg">
+  Tu navegador no soporta la reproducción de audio.
+</audio>
+
+<button id="audio-control" class="btn btn-dark" style="position: fixed; top: 10px; right: 10px; z-index: 1000;">
+  <i id="audio-icon" class="fas fa-pause"></i>
+</button>
+
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+    var audio = document.getElementById('background-music');
+    var audioControl = document.getElementById('audio-control');
+    var audioIcon = document.getElementById('audio-icon');
+
+    audio.play().then(function() {
+      console.log('El audio se está reproduciendo.');
+    }).catch(function(error) {
+      console.log('El audio no se pudo reproducir automáticamente debido a restricciones del navegador: ', error);
+      audioIcon.classList.remove('fa-pause');
+      audioIcon.classList.add('fa-play');
+    });
+
+    audioControl.addEventListener('click', function() {
+      if (audio.paused) {
+        audio.play();
+        audioIcon.classList.remove('fa-play');
+        audioIcon.classList.add('fa-pause');
+      } else {
+        audio.pause();
+        audioIcon.classList.remove('fa-pause');
+        audioIcon.classList.add('fa-play');
+      }
+    });
+  });
+</script>
+</body>
+</html>

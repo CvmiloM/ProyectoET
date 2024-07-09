@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Listado de Productos</title>
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+  {% load static %}
+  <link rel="stylesheet" type="text/css" href="{% static 'css/estilos.css' %}">
+  <style>
+    body {
+      background-color: #1a1a2e;
+      color: #eaeaea;
+    }
+    .navbar {
+      background-color: #0f3460;
+    }
+    .navbar-brand, .nav-link {
+      color: #eaeaea !important;
+    }
+    .card {
+      background-color: #16213e;
+      border: none;
+      color: #eaeaea;
+    }
+    .card-img-top {
+      height: 200px;
+      object-fit: cover;
+    }
+    .product-card {
+      transition: transform 0.2s;
+    }
+    .product-card:hover {
+      transform: scale(1.05);
+    }
+    .product-name {
+      font-size: 1.3rem;
+      font-weight: bold;
+      color: #e94560;
+    }
+    .product-price {
+      font-size: 1.2rem;
+      color: #eaeaea;
+    }
+    .product-actions a {
+      margin: 0 5px;
+    }
+    .btn-dark {
+      background-color: #0f3460;
+      border: none;
+    }
+    .btn-dark:hover {
+      background-color: #16213e;
+    }
+    .btn-danger {
+      background-color: #e94560;
+      border: none;
+    }
+    .btn-danger:hover {
+      background-color: #ff6f61;
+    }
+    .footer-text {
+      font-size: 0.9rem;
+    }
+  </style>
+</head>
+<body>
+  <nav class="navbar navbar-expand-lg navbar-light">
+    <div class="container">
+      <a class="navbar-brand" href="{% url 'index' %}">Game Figures Hub</a>
+      <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarSupportedContent">
+        <ul class="navbar-nav ml-auto">
+          <li class="nav-item">
+            <a class="nav-link" href="{% url 'index' %}">Inicio</a>
+          </li>
+          <li class="nav-item active">
+            <a class="nav-link" href="{% url 'lista_productos' %}">Productos</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="{% url 'ver_carrito' %}"><i class="fas fa-shopping-cart"></i> Carrito</a>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </nav>
+  <div class="container mt-4">
+    <div class="row">
+      <div class="col">
+        <h1 class="text-center mb-4">Listado de productos</h1>
+        <div class="text-right mb-4">
+          <a href="{% url 'crear_producto' %}" class="btn btn-dark">Crear Producto</a>
+        </div>
+        <div class="row">
+          {% for producto in productos %}
+          <div class="col-md-4 mb-4">
+            <div class="card product-card h-100">
+              {% if producto.imagen %}
+              <img src="{{ producto.imagen.url }}" class="card-img-top" alt="{{ producto.nombre }}">
+              {% else %}
+              <img src="https://via.placeholder.com/300" class="card-img-top" alt="{{ producto.nombre }}">
+              {% endif %}
+              <div class="card-body d-flex flex-column">
+                <div class="product-name">{{ producto.nombre }}</div>
+                <div class="product-price">${{ producto.precio }}</div>
+                <div class="mt-auto product-actions">
+                  <a href="{% url 'editar_producto' producto.id %}" class="btn btn-dark btn-sm">Editar</a>
+                  <a href="{% url 'eliminar_producto' producto.id %}" class="btn btn-danger btn-sm">Eliminar</a>
+                </div>
+              </div>
+            </div>
+          </div>
+          {% endfor %}
+        </div>
+      </div>
+    </div>
+  </div>
+  <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@1.16.1/dist/umd/popper.min.js"></script>
+  <script src="https://stackpath.bootstrap.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</body>
+</html>

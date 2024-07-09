@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Iniciar Sesión</title>
+    <link rel="icon" href="https://via.placeholder.com/16" type="image/x-icon">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <style>
+        body {
+            background-color: #575654;
+             color: #ffffff;
+        }
+        .login-container {
+            margin-top: 50px;
+        }
+        .card-header {
+            background-color: #007bff;
+            color: rgb(0, 225, 255);
+        }
+        .alert-info code {
+            background-color: #fafeff;
+            padding: 2px 4px;
+            border-radius: 3px;
+        }
+        .user-info {
+            background-color: #679795;
+            padding: 10px;
+            border-radius: 5px;
+        }
+        .user-info table {
+            width: 100%;
+        }
+        .user-info th, .user-info td {
+            padding: 5px;
+        }
+        .user-info th {
+            text-align: right;
+            font-weight: bold;
+        }
+        .user-info td {
+            text-align: left;
+        }
+    </style>
+</head>
+<body>
+    <div class="container login-container">
+        <div class="row justify-content-center">
+            <div class="col-md-6">
+                <div class="card">
+                    <div class="card-header text-center bg-dark">
+                        <h2>Iniciar Sesión</h2>
+                    </div>
+                    <div class="card-body">
+                        <form method="post">
+                            {% csrf_token %}
+                            <div class="form-group">
+                                {{ form.as_p }}
+                            </div>
+                            <button type="submit" class="btn btn-dark btn-block">Iniciar Sesión</button>
+                        </form>
+                        {% if form.errors %}
+                            <div class="alert alert-danger mt-3" role="alert">
+                                Por favor, introduce un nombre de usuario y contraseña correctos. Ambos campos pueden ser sensibles a mayúsculas.
+                            </div>
+                        {% endif %}
+                        <div class="alert alert-info mt-3 user-info" role="alert">
+                            <table>
+                                <tr>
+                                    <th>Nota:</th>
+                                    <td>Usuario: <code>admin</code>, Contraseña: <code>adminpassword</code></td>
+                                </tr>
+                                <tr>
+                                    <th>Nota:</th>
+                                    <td>Usuario: <code>Nando</code>, Contraseña: <code>nando</code></td>
+                                </tr>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@1.16.1/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrap.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</body>
+</html>

@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Detalle de la Compra</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+</head>
+<body class="bg-light">
+    <div class="container mt-5">
+        <div class="row">
+            <div class="col">
+                <h1 class="text-center">Detalle de la Compra #{{ compra.id }}</h1>
+                <ul class="list-group">
+                    {% for detalle in detalles %}
+                    <li class="list-group-item d-flex justify-content-between align-items-center">
+                        <span>{{ detalle.producto.nombre }} - Cantidad: {{ detalle.cantidad }} - Precio: ${{ detalle.producto.precio }}</span>
+                    </li>
+                    {% endfor %}
+                </ul>
+                <div class="text-right mt-3">
+                    <a href="{% url 'lista_compras' %}" class="btn btn-secondary">Volver a la Lista de Compras</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Tienda Geek</title>
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+  {% load static %}
+  <link rel="stylesheet" type="text/css" href="{% static 'css/estilos.css' %}">
+  <style>
+    body {
+      background-color: #121212;
+      color: #ffffff;
+    }
+    .navbar {
+      background-color: #2b65cf;
+    }
+    .navbar-brand {
+      color: #ff6f61;
+    }
+    .navbar-nav .nav-link {
+      color: #ffffff;
+    }
+    .navbar-nav .nav-link:hover {
+      color: #ff6f61;
+    }
+    .jumbotron {
+      background-image: url("{% static 'images/gamer_bg.jpg' %}");
+      background-size: cover;
+      color: #ff6f61;
+    }
+    .card {
+      background-color: #1f1f1f;
+      border: none;
+    }
+    .card-title {
+      color: #ff6f61;
+    }
+    .btn-dark {
+      background-color: #ff6f61;
+      border: none;
+    }
+    .btn-dark:hover {
+      background-color: #ff3b31;
+    }
+    .carousel-item img {
+      width: 100%;
+      height: 500px;
+      object-fit: cover;
+    }
+    .footer {
+      background-color: #1f1f1f;
+      color: #ffffff;
+    }
+  </style>
+</head>
+<body>
+  <nav class="navbar navbar-expand-lg navbar-dark">
+    <div class="container">
+      <a class="navbar-brand" href="{% url 'index' %}">Game Figures Hub</a>
+      <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarSupportedContent">
+        <ul class="navbar-nav ml-auto">
+          <li class="nav-item active">
+            <a class="nav-link" href="{% url 'index' %}">Inicio</a>
+          </li>
+          {% if user.is_authenticated and user.is_staff %}
+          <li class="nav-item">
+            <a class="nav-link" href="{% url 'lista_productos' %}">Productos</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="{% url 'lista_usuarios' %}">Usuarios</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="{% url 'crear_producto' %}">Crear Producto</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="{% url 'crear_usuario' %}">Crear Usuario</a>
+          </li>
+          {% endif %}
+
+
+          <li class="nav-item">
+            <a class="nav-link" href="{% url 'ver_carrito' %}"><i class="fas fa-shopping-cart"></i> Carrito</a>
+          </li>
+
+        
+          <li class="nav-item">
+            {% if user.is_authenticated %}
+              <form method="post" action="{% url 'logout' %}">
+                {% csrf_token %}
+                <button type="submit" class="btn btn-link nav-link" style="padding: 0; border: none; background: none;">Cerrar sesión</button>
+              </form>
+            {% else %}
+              <a class="nav-link" href="{% url 'login' %}">Iniciar sesión</a>
+            {% endif %}
+          </li>
+        </ul>
+        
+      </div>
+    </div>
+  </nav>
+  
+  <header class="jumbotron jumbotron-fluid text-center">
+    <div class="container">
+      <h1 class="display-4">Bienvenido a Tienda Gamer</h1>
+      <p class="lead">Encuentra las mejores figuras de tus personajes favoritos</p>
+    </div>
+  </header>
+  
+  <div class="container mt-4">
+    <!-- Carrusel de imágenes -->
+    <div id="carouselExampleIndicators" class="carousel slide mb-4" data-ride="carousel">
+      <ol class="carousel-indicators">
+        <li data-target="#carouselExampleIndicators" data-slide-to="0" class="active"></li>
+        <li data-target="#carouselExampleIndicators" data-slide-to="1"></li>
+        <li data-target="#carouselExampleIndicators" data-slide-to="2"></li>
+      </ol>
+      <div class="carousel-inner">
+        <div class="carousel-item active">
+          <img class="d-block w-100" src="{% static 'images/carrusel1.jpg' %}" alt="Primera imagen">
+          <div class="carousel-caption d-none d-md-block">
+            <h5>Figuras de Alta Calidad</h5>
+            <p>Descubre nuestra colección de figuras detalladas y realistas.</p>
+          </div>
+        </div>
+        <div class="carousel-item">
+          <img class="d-block w-100" src="{% static 'images/carrusel2.jpg' %}" alt="Segunda imagen">
+          <div class="carousel-caption d-none d-md-block">
+            <h5>Gran Variedad de Personajes</h5>
+            <p>Encuentra figuras de tus personajes favoritos de videojuegos, anime y cómics.</p>
+          </div>
+        </div>
+        <div class="carousel-item">
+          <img class="d-block w-100" src="{% static 'images/carrusel3.jpg' %}" alt="Tercera imagen">
+          <div class="carousel-caption d-none d-md-block">
+            <h5>Perfecto para Coleccionistas</h5>
+            <p>Figuras de colección para todos los fanáticos.</p>
+          </div>
+        </div>
+      </div>
+      <a class="carousel-control-prev" href="#carouselExampleIndicators" role="button" data-slide="prev">
+        <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+        <span class="sr-only">Anterior</span>
+      </a>
+      <a class="carousel-control-next" href="#carouselExampleIndicators" role="button" data-slide="next">
+        <span class="carousel-control-next-icon" aria-hidden="true"></span>
+        <span class="sr-only">Siguiente</span>
+      </a>
+    </div>
+    <!-- Fin del Carrusel -->
+
+    <div class="row">
+      <div class="col">
+        <div class="text-center">
+          <h2>Nuestros productos</h2>
+        </div>
+        <div class="card-deck">
+          {% for producto in productos %}
+          <div class="card mb-4">
+            {% if producto.imagen %}
+            <img src="{{ producto.imagen.url }}" class="card-img-top" alt="{{ producto.nombre }}">
+            {% else %}
+            <img src="https://via.placeholder.com/300" class="card-img-top" alt="{{ producto.nombre }}">
+            {% endif %}
+            <div class="card-body">
+              <h5 class="card-title">{{ producto.nombre }}</h5>
+              <p class="card-text">{{ producto.descripcion }}</p>
+              <p class="card-text"><strong>${{ producto.precio }}</strong></p>
+              <button class="btn btn-dark agregar-carrito" data-id="{{ producto.id }}">Agregar al carrito</button>
+            </div>
+          </div>
+          {% endfor %}
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="text-center">
+    <h2>Nuestras Ubicaciones</h2>
+  </div>
+  <div>
+    <iframe src="https://www.google.com/maps/d/embed?mid=10QPaKtamUVherXCBDAngOungsze9_NM&ehbc=2E312F" width="100%" height="600"></iframe>
+  </div>
+
+  <footer class="footer mt-5 p-4 text-center">
+    <p class="mb-0">&copy; Todos los derechos reservados.</p>
+  </footer>
+
+  <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@1.16.1/dist/umd/popper.min.js"></script>
+  <script src="https://stackpath.bootstrap.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      let carrito = JSON.parse(localStorage.getItem('carrito')) || [];
+      document.querySelectorAll('.agregar-carrito').forEach(button => {
+        button.addEventListener('click', () => {
+          const id = button.getAttribute('data-id');
+          const nombre = button.closest('.card').querySelector('.card-title').textContent;
+          const precio = button.closest('.card').querySelector('strong').textContent.replace('$', '');
+          const producto = { id, nombre, precio, cantidad: 1 };
+          const index = carrito.findIndex(item => item.id === id);
+          if (index === -1) {
+            carrito.push(producto);
+          } else {
+            carrito[index].cantidad += 1;
+          }
+          
+          localStorage.setItem('carrito', JSON.stringify(carrito));
+          alert(`${nombre} agregado al carrito`);
+        });
+      });
+    });
+  </script>
+
+   <!-- Apartado de musica -->
+   <audio id="background-music" autoplay loop>
+    <source src="{% static 'audio/intro.mp3' %}" type="audio/mpeg">
+    Tu navegador no soporta la reproducción de audio.
+  </audio>
+  
+  <button id="audio-control" class="btn btn-dark" style="position: fixed; top: 10px; right: 10px; z-index: 1000;">
+    <i id="audio-icon" class="fas fa-pause"></i>
+  </button>
+  
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      var audio = document.getElementById('background-music');
+      var audioControl = document.getElementById('audio-control');
+      var audioIcon = document.getElementById('audio-icon');
+  
+      audio.play().then(function() {
+        console.log('El audio se está reproduciendo.');
+      }).catch(function(error) {
+        console.log('El audio no se pudo reproducir automáticamente debido a restricciones del navegador: ', error);
+        audioIcon.classList.remove('fa-pause');
+        audioIcon.classList.add('fa-play');
+      });
+  
+      audioControl.addEventListener('click', function() {
+        if (audio.paused) {
+          audio.play();
+          audioIcon.classList.remove('fa-play');
+          audioIcon.classList.add('fa-pause');
+        } else {
+          audio.pause();
+          audioIcon.classList.remove('fa-pause');
+          audioIcon.classList.add('fa-play');
+        }
+      });
+    });
+  </script>
+  
+</body>
+</html>

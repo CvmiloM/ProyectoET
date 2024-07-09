@@ -1,0 +1,59 @@
+/* static/css/estilos.css */
+
+body {
+    background-color: #f8f9fa; /* Fondo claro */
+    color: #007bff; /* Texto oscuro */
+    font-family: Arial, sans-serif; /* Fuente limpia y legible */
+}
+
+h1, h2, h3, h4, h5, h6 {
+    color: #f8f9fa; /* Color de encabezados más oscuro */
+}
+
+p, div, span, a, li, ul, ol, table, th, td {
+    color: #007bff; /* Texto oscuro */
+    background-color: transparent; /* Fondo transparente */
+}
+
+a {
+    color: #007bff; /* Color de enlace azul */
+    text-decoration: none; /* Sin subrayado */
+}
+
+a:hover {
+    color: #0056b3; /* Color de enlace azul oscuro en hover */
+    text-decoration: underline; /* Subrayado en hover */
+}
+
+.btn-primary {
+    background-color: #007bff; /* Fondo de botón azul */
+    border-color: #007bff; /* Borde de botón azul */
+}
+
+.btn-primary:hover {
+    background-color: #0056b3; /* Fondo de botón azul oscuro en hover */
+    border-color: #0056b3; /* Borde de botón azul oscuro en hover */
+}
+
+.card {
+    border: 1px solid #dee2e6; /* Borde de tarjeta claro */
+    border-radius: 0.25rem; /* Esquinas redondeadas */
+}
+
+.card-header {
+    background-color: #e9ecef; /* Fondo claro para el encabezado de la tarjeta */
+    border-bottom: 1px solid #dee2e6; /* Borde inferior claro */
+    color: #495057; /* Color del texto del encabezado */
+}
+
+.card-body {
+    background-color: #ffffff; /* Fondo blanco para el cuerpo de la tarjeta */
+    color: #343a40; /* Color del texto del cuerpo */
+}
+
+.footer {
+    background-color: #e6330f; /* Fondo oscuro para el pie de página */
+    color: #ffffff; /* Texto blanco */
+    padding: 1rem; /* Espaciado interno */
+    text-align: center; /* Centrar el texto */
+}
