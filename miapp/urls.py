@@ -4,6 +4,7 @@ from django.urls import path
 from django.conf import settings
 from .views import lista_usuarios, eliminar_usuario
 from django.conf.urls.static import static
+from .views import eliminar_compra, lista_compras
 from miapp.views import (
     lista_productos, crear_producto, editar_producto, eliminar_producto, 
     lista_usuarios, crear_usuario, guardar_carrito, 
@@ -20,12 +21,14 @@ urlpatterns = [
     path('guardar_carrito/', guardar_carrito, name='guardar_carrito'),
     path('compras/', lista_compras, name='lista_compras'),
     path('compras/<int:compra_id>/', detalle_compra, name='detalle_compra'),
+    
     path('', index, name='index'),
     path('carrito/', ver_carrito, name='ver_carrito'),
     path('login/', CustomLoginView.as_view(), name='login'),
     path('logout/', CustomLogoutView.as_view(), name='logout'),
     path('usuarios/', lista_usuarios, name='lista_usuarios'),
     path('usuarios/eliminar/<int:usuario_id>/', eliminar_usuario, name='eliminar_usuario'),
+    path('compras/eliminar/<int:compra_id>/', eliminar_compra, name='eliminar_compra'),
 ]
 
 if settings.DEBUG:
