@@ -8,6 +8,7 @@ from django.core.mail import send_mail
 from django.contrib.auth.models import User
 from .forms import FormUsuario
 from .models import UsuarioAdmin
+from django.contrib import messages
 
 
 
@@ -36,7 +37,11 @@ def admin_required(view_func):
 def lista_compra(request):
     compras = Compra.objects.all()
     return render(request, 'lista_compra.html', {'compras': compras})
-
+def eliminar_compra(request, compra_id):
+    compra = get_object_or_404(Compra, id=compra_id)
+    compra.delete()
+    messages.success(request, 'Compra eliminada exitosamente.')
+    return redirect('lista_compras')
 @login_required
 def detalle_compra(request, compra_id):
     compra = get_object_or_404(Compra, id=compra_id)
@@ -185,3 +190,5 @@ def eliminar_usuario(request, usuario_id):
         return redirect('lista_usuarios')  # Redirigir sin eliminar si el usuario es admin
     usuario.delete()
     return redirect('lista_usuarios')
+
+
