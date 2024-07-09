@@ -6,8 +6,8 @@ Game Figures Hub es una tienda en línea para los entusiastas de las figuras de 
 
 - **Autenticación de Usuarios**: Los usuarios pueden registrarse, iniciar sesión y cerrar sesión.
 - **Roles de Usuario**: Existen roles de administrador y usuario normal.
-  - **Administrador**: Puede gestionar productos y usuarios.
-  - **Usuario Normal**: Puede ver productos, agregar productos al carrito y realizar compras.
+- **Administrador**: Puede gestionar productos y usuarios.
+- **Usuario Normal**: Puede ver productos, agregar productos al carrito y realizar compras.
 - **Gestión de Productos**: Los administradores pueden crear, leer, actualizar y eliminar productos.
 - **Carrito de Compras**: Los usuarios pueden agregar productos al carrito y proceder a la compra.
 - **Búsqueda de Productos**: Incluye una barra de búsqueda para facilitar la localización de productos.
@@ -74,11 +74,9 @@ Sigue estos pasos para configurar el proyecto localmente:
 
 ## Archivos Importantes
 
-- `game_figures_hub/`: Directorio principal del proyecto.
 - `templates/`: Contiene las plantillas HTML.
 - `static/`: Contiene archivos estáticos como CSS, JavaScript e imágenes.
 - `media/`: Contiene archivos subidos, como imágenes de productos.
-- `requirements.txt`: Archivo con las dependencias del proyecto.
 - `README.md`: Este archivo con la documentación del proyecto.
 
 ## Personalización
